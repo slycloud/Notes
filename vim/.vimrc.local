@@ -1,0 +1,38 @@
+" add "\v" for each special character automatically, when doing regex search
+" seems no need?
+"nnoremap / /\v
+
+" enable <backspace> to clear highlight for last search matches
+nmap <silent> <BS> :nohlsearch<CR>
+
+" reload file already opened in vim automatically, when it is changed
+:set autoread
+
+" make undo history persistent
+if has('persistent_undo')
+    set undofile
+endif
+" directory for all persistent history files
+set undodir=$HOME/.VIM_UNDO_FILES
+" max number of changes can be undo, 1000 by default
+set undolevels=5000
+
+" list: list the possibilities
+" longest: fill in the longest common prefix
+" full: cycle the full possiblities when sequent <TAB> hit
+set wildmode=list:longest,full
+
+" IDE: enable eclim
+let g:EclimCompletionMethod = 'omnifunc'
+
+" IDE: add copyright to new file
+" attention: ntree plugin triggers BufReadPost event instead of
+BufNewFile event, when creating a new file.
+" autocmd BufReadPost *.java 0r ~/.vim/copyright.txt
+function InsertCopyrightIfEmpty()
+    if line('$') == 1 && getline(1) == ''
+        execute "0r ~/.vim/copyright.txt"
+    endif
+endfunction
+autocmd BufReadPost *.java :call
+InsertCopyrightIfEmpty()
